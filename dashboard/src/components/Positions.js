@@ -1,19 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios, { all } from "axios";
-import { VerticalGraph } from "./VerticalGraph";
+import React from "react";
 
-// import { positions } from "../data/data";
-
-const positions = () => {
-  const [allPosition, setallPosition] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:3002/allPosition").then((res) => {
-      // console.log(res.data);
-      allPosition(res.data);
-    });
-  }, []);
-};
+import { positions } from "../data/data";
 
 const Positions = () => {
   return (
