@@ -20,7 +20,7 @@ function Team() {
         </div>
         <div className="col-6 p-5">
           <p>
-            Nithin bootstrapped and founded Zerodha in 2010 to overcome the
+            Alok bootstrapped and founded Zerodha in 2025 to overcome the
             hurdles he faced during his decade long stint as a trader. Today,
             Zerodha has changed the landscape of the Indian broking industry.
           </p>
