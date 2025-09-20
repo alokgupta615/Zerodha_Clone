@@ -7,4 +7,4 @@ const OrdersSchema = new Schema({
   mode: String,
 });
 
-module.exports = { OrdersSchemaSchema };
+module.exports = { OrdersSchema };
