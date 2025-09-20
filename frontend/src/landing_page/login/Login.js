@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { handleError, handleSuccess } from "../utils";
-import { validateSignup } from "../../landing_page/util/validations";
+import {
+  handleError,
+  handleSuccess,
+} from "../../landing_page/util/notifications";
 
-function Signup() {
-  const [signupInfo, setSignupInfo] = useState({
-    name: "",
+function Login() {
+  const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
   });
@@ -15,28 +16,33 @@ function Signup() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSignupInfo((prev) => ({ ...prev, [name]: value }));
+    setLoginInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const errorMsg = validateSignup(signupInfo);
-    if (errorMsg) return handleError(errorMsg);
+    const { email, password } = loginInfo;
+
+    if (!email || !password) {
+      return handleError("Email and password are required");
+    }
 
     try {
-      const url = `https://deploy-mern-app-1-api.vercel.app/auth/signup`;
+      const url = `https://deploy-mern-app-1-api.vercel.app/auth/login`;
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(signupInfo),
+        body: JSON.stringify(loginInfo),
       });
 
       const result = await response.json();
-      const { success, message, error } = result;
+      const { success, message, jwtToken, name, error } = result;
 
       if (success) {
         handleSuccess(message);
-        setTimeout(() => navigate("/login"), 1000);
+        localStorage.setItem("token", jwtToken);
+        localStorage.setItem("loggedInUser", name);
+        setTimeout(() => navigate("/home"), 1000);
       } else if (error) {
         handleError(error?.details?.[0]?.message || "Something went wrong");
       } else {
@@ -50,23 +56,8 @@ function Signup() {
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <div className="card shadow-lg p-4" style={{ width: "28rem" }}>
-        <h1 className="text-center mb-4">Signup</h1>
-        <form onSubmit={handleSignup}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label fw-semibold">
-              Name
-            </label>
-            <input
-              onChange={handleChange}
-              type="text"
-              name="name"
-              placeholder="Enter your name..."
-              value={signupInfo.name}
-              className="form-control"
-              autoFocus
-            />
-          </div>
-
+        <h1 className="text-center mb-4">Login</h1>
+        <form onSubmit={handleLogin}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label fw-semibold">
               Email
@@ -76,8 +67,9 @@ function Signup() {
               type="email"
               name="email"
               placeholder="Enter your email..."
-              value={signupInfo.email}
+              value={loginInfo.email}
               className="form-control"
+              autoFocus
             />
           </div>
 
@@ -90,19 +82,19 @@ function Signup() {
               type="password"
               name="password"
               placeholder="Enter your password..."
-              value={signupInfo.password}
+              value={loginInfo.password}
               className="form-control"
             />
           </div>
 
           <button type="submit" className="btn btn-primary w-100">
-            Signup
+            Login
           </button>
 
           <p className="text-center mt-3 mb-0">
-            Already have an account?{" "}
-            <Link to="/login" className="fw-semibold text-decoration-none">
-              Login
+            Don't have an account?{" "}
+            <Link to="/signup" className="fw-semibold text-decoration-none">
+              Signup
             </Link>
           </p>
         </form>
@@ -112,4 +104,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
